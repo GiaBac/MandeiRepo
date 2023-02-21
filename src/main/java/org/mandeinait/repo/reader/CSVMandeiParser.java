@@ -17,7 +17,7 @@ public class CSVMandeiParser {
 	public void parseFiles(InputParameters inputParams) throws IOException {
 
 		ParsedFile parsedStandingCSV = parseCsvFile(inputParams.getStandingPath());
-		validateStanding(parsedStandingCSV);
+		validateAndConvertStanding(parsedStandingCSV);
 
 		ParsedFile parsedTopScorerCSV = parseCsvFile(inputParams.getTopScorerPath());
 		validateTopScorer(parsedTopScorerCSV);
@@ -36,7 +36,7 @@ public class CSVMandeiParser {
 				+ parsedTopScorerCSV.getRecords());
 	}
 
-	private void validateStanding(ParsedFile parsedStandingCSV) {
+	private void validateAndConvertStanding(ParsedFile parsedStandingCSV) {
 		System.out.println("Standig loaded correctly numCol:" + parsedStandingCSV.getColumns() + " numRecord:"
 				+ parsedStandingCSV.getRecords());
 	}
