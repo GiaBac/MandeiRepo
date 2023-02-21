@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.mandeinait.repo.model.Season;
 
 public class CSVMandeiParser {
 
@@ -27,18 +28,24 @@ public class CSVMandeiParser {
 	}
 
 	private void validateResult(ParsedFile parsedResultCSV) {
-		System.out.println("Result loaded correctly numCol:" + parsedResultCSV.getColumns() + " numRecord:"
+		System.out.println("Result loaded correctly col:" + parsedResultCSV.getColumns() + " record:"
 				+ parsedResultCSV.getRecords());
 	}
 
 	private void validateTopScorer(ParsedFile parsedTopScorerCSV) {
-		System.out.println("TopScorer loaded correctly numCol:" + parsedTopScorerCSV.getColumns() + " numRecord:"
+		System.out.println("TopScorer loaded correctly col:" + parsedTopScorerCSV.getColumns() + " record:"
 				+ parsedTopScorerCSV.getRecords());
 	}
 
 	private void validateAndConvertStanding(ParsedFile parsedStandingCSV) {
-		System.out.println("Standig loaded correctly numCol:" + parsedStandingCSV.getColumns() + " numRecord:"
+		System.out.println("Standig loaded correctly col:" + parsedStandingCSV.getColumns() + " record:"
 				+ parsedStandingCSV.getRecords());
+		Season currSeason = extractSeason();
+	}
+
+	private Season extractSeason() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private ParsedFile parseCsvFile(String filePath) throws IOException {

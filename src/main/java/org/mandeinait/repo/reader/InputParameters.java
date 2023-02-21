@@ -53,7 +53,7 @@ public class InputParameters {
 
 			final String standingPath = cmd.getArgs()[0];
 			final String topScorerPath = cmd.getArgs()[1];
-			final String resultPath = cmd.getArgs()[1];
+			final String resultPath = cmd.getArgs()[2];
 
 			return new InputParameters(standingPath, topScorerPath, resultPath);
 		} catch (ParseException e) {
