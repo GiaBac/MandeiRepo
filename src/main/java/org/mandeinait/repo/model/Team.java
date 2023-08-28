@@ -23,4 +23,8 @@ public class Team {
 	public int getGoals() {
 		return goals;
 	}
+
+	public String toString() {
+		return "<Goal:" + goals + ", Players:" + players + ">";
+	}
 }

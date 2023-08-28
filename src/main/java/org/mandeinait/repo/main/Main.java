@@ -1,46 +1,71 @@
 package org.mandeinait.repo.main;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map.Entry;
 
-import org.mandeinait.repo.reader.CSVMandeiParser;
+import org.mandeinait.repo.model.Player;
+import org.mandeinait.repo.model.PlayerRepository;
+import org.mandeinait.repo.model.Result;
+import org.mandeinait.repo.model.Season;
 import org.mandeinait.repo.reader.ExcelMandeiParser;
-import org.mandeinait.repo.reader.InputParameters;
-import org.mandeinait.repo.reader.ParserException;
 
 public class Main {
 
 	public static void main(String[] args) {
 		System.out.println("Starting!\nVersion 1.0");
 
-		InputParameters inputParams;
-
-//		try {
-//			inputParams = InputParameters.parseInputParam(args);
-//		} catch (ParserException e1) {
-//			stopProgram(1);
-//			return;
-//		}
-//
-//		System.out.println("Standing File: " + inputParams.getStandingPath());
-//		System.out.println("Top Scorer File: " + inputParams.getTopScorerPath());
-//		System.out.println("Result File: " + inputParams.getResultPath());
-
-//		CSVMandeiParser mandeiParser = new CSVMandeiParser();
 		ExcelMandeiParser mandeiParser = new ExcelMandeiParser();
+//		String fileName = "D:\\GIACOMO\\DEV\\mandeiFile\\03_Stagione Invernale 2017.xls";
 
-		try {
-			mandeiParser.parseFile("C:\\Users\\giacomobachi\\MyTemp\\Stagione Estiva 2015.xls");
-		} catch (IOException e) {
-			System.out.print("Error parsing the file: " + e.getMessage());
-			e.printStackTrace();
-			stopProgram(1);
-			return;
+		File folderFiles = new File("D:\\GIACOMO\\DEV\\mandeiFile\\mandeiXls");
+//		File folderFiles = new File("D:\\GIACOMO\\DEV\\mandeiFile\\test");
+		File[] files = folderFiles.listFiles();
+
+		PlayerRepository pr = new PlayerRepository();
+
+		for (File file : files) {
+			try {
+				mandeiParser.parseFile(file, pr);
+			} catch (IOException e) {
+				System.out.print("Error parsing the file " + file.getName() + ": " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		System.out.print("Dump player list:" + pr.toString());
+
+		calcAficionados(pr);
+
+		stopProgram(0);
+	}
+
+	private static void stopProgram(int status) {
+		if (status != 0) {
+			System.out.println("Terminated with error!");
+		} else {
+			System.out.println("Terminated correctly!");
+		}
+
+		System.exit(status);
+	}
+
+	private static void calcAficionados(PlayerRepository pr) {
+		System.out.println("Aficionados:");
+
+		for (Player p : pr.getAll()) {
+			int numMatch = 0;
+			int numSeason = 0;
+
+			for (Entry<Season, List<Result>> ms : p.getMatches().entrySet()) {
+				numSeason++;
+				numMatch += ms.getValue().size();
+			}
+
+			System.out.println(p.toString() + ",NumMatch, " + numMatch + ",Num Season, " + numSeason);
 		}
 
 	}
 
-	private static void stopProgram(int status) {
-		System.out.println("Terminated!");
-		System.exit(0);
-	}
 }

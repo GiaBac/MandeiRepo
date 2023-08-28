@@ -1,11 +1,12 @@
 package org.mandeinait.repo.model;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerRepository {
 
-	Map<String, Player> repo;
+	private final Map<String, Player> repo;
 
 	public PlayerRepository() {
 		repo = new HashMap<>();
@@ -16,6 +17,17 @@ public class PlayerRepository {
 	}
 
 	public Player get(String playerName) {
-		return repo.get(playerName);
+
+		String normalizedName = Player.getNormalizedPlayerName(playerName);
+
+		return repo.get(normalizedName);
+	}
+
+	public String toString() {
+		return repo.values().toString();
+	}
+
+	public Collection<Player> getAll() {
+		return repo.values();
 	}
 }

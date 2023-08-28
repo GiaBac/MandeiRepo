@@ -2,72 +2,39 @@ package org.mandeinait.repo.reader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.csv.CSVRecord;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.mandeinait.repo.model.Result;
+import org.mandeinait.repo.model.PlayerRepository;
+import org.mandeinait.repo.model.Season;
 
 public class ExcelMandeiParser {
 
-	public ParsedFile parseFile(String filePath) throws IOException {
-		List<CSVRecord> records = new ArrayList<>();
-		Set<String> columns = new HashSet<>();
-		Workbook wb = WorkbookFactory.create(new File(filePath));
-
+	public void parseFile(File inputFile, PlayerRepository playerRepo) throws IOException {
+		Workbook wb = WorkbookFactory.create(inputFile);
+		String seasoname = inputFile.getName();
 		for (Sheet sheet : wb) {
 			String sheetName = sheet.getSheetName();
-			System.out.println("Parsing :" + sheetName);
+			System.out.println("***** Starting Parsing season:" + seasoname + " sheet " + sheetName + "*****");
+			Season season = new Season(seasoname);
+
 			if (sheetName.contains("Punti")) {
 
 			} else if (sheetName.contains("Marcatori")) {
 
 			} else if (sheetName.contains("Risultati")) {
-				ResultsParser.parse(sheet);
+				try {
+					ResultsParser.parse(season, playerRepo, sheet);
+				} catch (Exception e) {
+					System.out.println("Error during parsing sheet Risultati of season " + seasoname + ". Err Msg:"
+							+ e.getMessage());
+					e.printStackTrace();
+				}
 			} else {
-				throw new IllegalArgumentException("Sheet name: " + sheetName + " not recognized!");
+				System.out.println("Sheet name: " + sheetName + " not recognized!");
 			}
-//			for (Row row : sheet) {
-//				System.out.println(
-//						"\tFirst cell num " + row.getFirstCellNum() + " Last cell num " + row.getLastCellNum());
-//				for (Cell cell : row) {
-//					System.out.print("\t\tCell val " + readCellValue(cell) + " col "
-//							+ cell.getCellStyle().getFillForegroundColor());
-//				}
-//			}
 		}
-
-		return new ParsedFile(filePath, records, columns);
-	}
-
-	private static Object readCellValue(Cell cell) {
-		CellType cellType = cell.getCellType();
-		switch (cellType) {
-		case NUMERIC:
-			return cell.getNumericCellValue();
-		case STRING:
-			return cell.getStringCellValue();
-		case FORMULA:
-			return cell.getCellFormula();
-		case BLANK:
-			return "Blank";
-		case BOOLEAN:
-			return cell.getBooleanCellValue();
-		case ERROR:
-			return cell.getErrorCellValue();
-		case _NONE:
-		default:
-			return "NONE";
-		}
+		System.out.println("***** Complete Parsing season:" + seasoname + "*****");
 	}
 }
